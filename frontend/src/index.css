@@ -1,1 +1,9 @@
 @import "tailwindcss";
+
+.active {
+  @apply font-semibold;
+  @apply px-2;
+  @apply py-0.5;
+  @apply rounded;
+  @apply bg-gray-100;
+}
