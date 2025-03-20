@@ -6,6 +6,7 @@ import { BrowserRouter, Route, Routes } from "react-router";
 import NavBar from "./components/NavBar.tsx";
 import Page404 from "./components/Page404.tsx";
 import Profile from "./components/user/Profile.tsx";
+import Register from "./components/user/Register.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -20,7 +21,7 @@ createRoot(document.getElementById("root")!).render(
             <Route path="/genre/new" element={<App />} />
             <Route path="/movie/new" element={<App />} />
             <Route path="/profile" element={<Profile />} />
-            <Route path="/register" element={<App />} />
+            <Route path="/register" element={<Register />} />
             <Route path="/login" element={<App />} />
             <Route path="*" element={<Page404 />} />
           </Routes>
