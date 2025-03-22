@@ -2,6 +2,7 @@ from flask import Flask, render_template
 from flask_jwt_extended import JWTManager
 from blueprints.user_blueprint import user_bp
 from blueprints.genre_blueprint import genre_bp
+from blueprints.movies_blueprint import movies_bp
 from blueprints.auth import auth_bp
 from db import db
 
@@ -14,6 +15,7 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.register_blueprint(user_bp)
 app.register_blueprint(auth_bp)
 app.register_blueprint(genre_bp)
+app.register_blueprint(movies_bp)
 
 db.init_app(app)
 
