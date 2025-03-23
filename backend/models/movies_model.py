@@ -12,12 +12,13 @@ class MoviesModel(db.Model):
     # genre = db.relationship("GenreModel", back_populates="genre")
 
     def json(self):
+
         return {
-            "id": self.id,
+            "genre_id": self.genre.id,
             "name": self.name,
             "ott": self.ott,
             "genre": self.genre.json() if self.genre else "NA",
-            "release_date": str(self.releasedate),
+            "release_date": str(self.releasedate.strftime("%d-%m-%Y")),
         }
 
     def save(self):

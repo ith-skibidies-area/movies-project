@@ -9,7 +9,7 @@ class GenreModel(db.Model):
     movies = db.relationship("MoviesModel", backref="genre", lazy="joined")
 
     def json(self):
-        return {"id": self.id, "name": self.name}
+        return {"name": self.name}
 
     def save(self):
         db.session.add(self)

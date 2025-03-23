@@ -12,16 +12,18 @@ def register_user():
     password = payload.get("password")
     role = payload.get("role")
 
-    if not username or not password:
-        return {"msg": "Failed"}, 400
+    if not username:
+        return {"msg": f"username not entered"}, 400
+    if not password:
+        return {"msg": f"password not entered"}, 400
 
     if UserModel.find_one(username=username):
-        return {"msg": "Failed"}, 400
+        return {"msg": "username already taken"}, 400
 
     user = UserModel(username=username, password=password, role=role)
     user.save()
 
-    return {"msg": "Success"}, 200
+    return {"msg": "user created"}, 200
 
 
 @user_bp.route("/users")
@@ -34,21 +36,21 @@ def show_all_users():
 def edit_delete_users(username):
     jwt = get_jwt()
     if jwt.get("role", "NA") != "admin":
-        return {"msg": "not authorized"}, 400
+        return {"msg": "you are not authorized to perform this operation"}, 400
     else:
         user = UserModel.find_one(username=username)
 
         if not user:
-            return {"msg": "Failed"}, 400
+            return {"msg": "user not found"}, 400
         # Only the role is being updated here. Can be modified as required.
         if request.method == "PUT":
             payload = request.get_json()
             role = payload.get("role")
             user.role = role
             user.save()
-            return {"msg": "success"}, 200
+            return {"msg": "user edited"}, 200
         # Since only the admin has the access to delete the user, username/password validation
         # is not checked here
         if request.method == "DELETE":
             user.delete()
-            return {"msg": "success"}, 200
+            return {"msg": "user deleted"}, 200
