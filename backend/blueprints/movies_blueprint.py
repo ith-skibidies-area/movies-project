@@ -22,12 +22,15 @@ def show_create_movies():
             release_date = payload.get("release_date")
             updated_date = date(release_date["year"], release_date["month"], release_date["date"])
 
+            if not name or not genre_id or not ott or not release_date:
+                return {"msg": "invalid inputs"}, 400
+
             if MoviesModel.find_one(name=name):
-                return {"msg": "movies exits"}, 400
+                return {"msg": "move name already taken"}, 400
 
             movie = MoviesModel(name=name, genre_id=genre_id, ott=ott, releasedate=updated_date)
             movie.save()
-            return {"msg": "added"}, 200
+            return {"msg": "movie created"}, 200
 
 
 @movies_bp.route("/movie/<int:id>", methods=["GET", "PUT", "DELETE"])
@@ -35,7 +38,7 @@ def show_create_movies():
 def show_all_movies(id):
     movie = MoviesModel.find_one(id=id)
     if not movie:
-        return {"msg": "not found"}, 400
+        return {"msg": "movie not found"}, 400
 
     if request.method == "GET":
         return movie.json()
@@ -51,6 +54,9 @@ def show_all_movies(id):
         payloaddate = payload.get("release_date")
         release_date = date(payloaddate["year"], payloaddate["month"], payloaddate["date"])
 
+        if MoviesModel.find_one(name=name):
+            return {"msg": "movie name already taken"}, 200
+
         movie_obj = MoviesModel.find_one(id=id)
         movie_obj.name = name
         movie_obj.genre_id = genre_id
@@ -59,12 +65,12 @@ def show_all_movies(id):
 
         movie_obj.save()
 
-        return {"msg": "success"}, 200
+        return {"msg": "movie edited"}, 200
 
     elif request.method == "DELETE":
 
         if get_jwt().get("role", "NA") != "admin":
-            return {"msg": "not authorized"}, 400
+            return {"msg": "you are not authorized to perform this operation"}, 400
 
         movie.delete()
-        return {"msg": "success"}, 200
+        return {"msg": "movie deleted"}, 200
