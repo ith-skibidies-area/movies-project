@@ -2,8 +2,11 @@ from db import db
 
 
 class GenreModel(db.Model):
+    __table_name__ = "genre"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
+
+    movies = db.relationship("MoviesModel", backref="genre", lazy="joined")
 
     def json(self):
         return {"id": self.id, "name": self.name}
