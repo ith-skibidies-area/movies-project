@@ -1,6 +1,8 @@
 import { FieldValues, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import http from "../../services/http";
+import { toast } from "react-toastify";
 
 const schema = yup
   .object({
@@ -26,13 +28,27 @@ const Register = () => {
   const {
     register,
     handleSubmit,
+    setValue,
+    reset,
     formState: { errors },
   } = useForm<formData>({ resolver: yupResolver(schema) });
 
   const onSubmit = (data: FieldValues) => {
     console.warn("Validation not yet added for the form");
     console.log("Form submit clicked");
-    console.log(data);
+    const username = data.username;
+    const role = data.role;
+    reset();
+    http
+      .post("/register", data)
+      .then((response) => {
+        toast.success(response.data.msg);
+      })
+      .catch((error) => {
+        toast.error(error.response.data.msg);
+        setValue("username", username);
+        setValue("role", role);
+      });
   };
 
   const onError = () => {
@@ -42,7 +58,7 @@ const Register = () => {
   return (
     <div className="flex justify-center items-center">
       <div className="border border-gray-300 p-3 rounded-lg shadow">
-        <div className="text-2xl font-bold text-gray-800">Register your account</div>
+        <div className="text-2xl font-bold text-gray-800">Register Your Account</div>
         <hr className="text-gray-400" />
         <div className="">
           <form autoComplete="off" onSubmit={handleSubmit(onSubmit, onError)}>
