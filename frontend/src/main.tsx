@@ -1,8 +1,8 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
-import App from "./App.tsx";
 import { BrowserRouter, Route, Routes } from "react-router";
+import { Bounce, ToastContainer } from "react-toastify";
 import NavBar from "./components/NavBar.tsx";
 import Page404 from "./components/Page404.tsx";
 import Profile from "./components/user/Profile.tsx";
@@ -10,7 +10,7 @@ import Register from "./components/user/Register.tsx";
 import Login from "./components/user/Login.tsx";
 import CreateGenre from "./components/genre/CreateGenre.tsx";
 import CreateMovie from "./components/movie/CreateMovie.tsx";
-import { Bounce, ToastContainer } from "react-toastify";
+import ShowMovies from "./components/movie/ShowMovies.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -34,7 +34,7 @@ createRoot(document.getElementById("root")!).render(
         </div>
         <div className="grow p-8">
           <Routes>
-            <Route path="/" element={<App />} />
+            <Route path="/" element={<ShowMovies />} />
             <Route path="/genre/:id" element={<CreateGenre />} />
             <Route path="/movie/:id" element={<CreateMovie />} />
             <Route path="/profile" element={<Profile />} />

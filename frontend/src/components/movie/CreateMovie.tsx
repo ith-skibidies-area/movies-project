@@ -1,21 +1,27 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
-import { useParams } from "react-router";
+import http from "../../services/http";
+import { toast } from "react-toastify";
 
 type formData = {
   name: string;
-  gener_id: number;
+  genre_id: number;
   ott: string;
   release_date: string;
 };
 
+type GenreData = {
+  name: string;
+};
+
 const CreateMovie = () => {
-  const { register, handleSubmit, setValue } = useForm<formData>();
-  const { id } = useParams();
+  const { register, handleSubmit } = useForm<formData>();
+  const [genres, setGenres] = useState<GenreData[]>([]);
+  const [otts, setOtts] = useState([]);
 
   useEffect(() => {
-    console.log("Passed ID:", id);
-    setValue("release_date", "2025-03-25");
+    http.get("/genres").then((response) => setGenres(response.data));
+    http.get("/ott").then((response) => setOtts(response.data));
   }, []);
 
   const onSubmit = (data: FieldValues) => {
@@ -28,6 +34,14 @@ const CreateMovie = () => {
     };
     const input_data = { ...data, release_date };
     console.log(input_data);
+    http
+      .post("/movies", input_data, { headers: { Authorization: "Bearer " + localStorage.getItem("accessToken") } })
+      .then((response) => {
+        toast.success(response.data.msg);
+      })
+      .catch((error) => {
+        toast.error(error.response.data.msg);
+      });
   };
 
   const onError = () => {
@@ -54,18 +68,21 @@ const CreateMovie = () => {
               />
             </div>
             <div className="mt-3 flex flex-col gap-1">
-              <label className="cursor-pointer font-medium text-gray-800" htmlFor="gener_id">
+              <label className="cursor-pointer font-medium text-gray-800" htmlFor="genre_id">
                 Genre ID<span className="text-red-600 text-sm">*</span>
               </label>
               <select
                 className="border font-medium text-gray-900 p-1 rounded border-gray-200 focus:outline-sky-400"
-                id="gener_id"
-                {...register("gener_id")}
+                id="genre_id"
+                {...register("genre_id")}
                 defaultValue={"0"}
               >
                 <option value="0">---Select---</option>
-                <option value="1">Action</option>
-                <option value="2">Horror</option>
+                {genres.map((genre, index) => (
+                  <option key={genre.name} value={index + 1}>
+                    {genre.name}
+                  </option>
+                ))}
               </select>
             </div>
             <div className="mt-3 flex flex-col gap-1">
@@ -79,10 +96,11 @@ const CreateMovie = () => {
                 defaultValue={"default"}
               >
                 <option value="default">---Select---</option>
-                <option value="Amazon">Amazon</option>
-                <option value="Jio">Jio</option>
-                <option value="Sony">Sony</option>
-                <option value="Hulu">Hulu</option>
+                {otts.map((ott) => (
+                  <option key={ott} value={ott}>
+                    {ott}
+                  </option>
+                ))}
               </select>
             </div>
             <div className="mt-3 flex flex-col gap-1">
