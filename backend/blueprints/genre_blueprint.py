@@ -20,7 +20,7 @@ def create_genre():
         return {"msg": "invalid input"}, 400
 
     if GenreModel.find_one(name=name):
-        return {"msg": "genre already exist"}
+        return {"msg": "genre already exist"}, 400
 
     genre = GenreModel(name=name)
     genre.save()
