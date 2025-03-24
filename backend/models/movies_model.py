@@ -14,7 +14,7 @@ class MoviesModel(db.Model):
     def json(self):
 
         return {
-            "genre_id": self.genre.id,
+            "id": self.id,
             "name": self.name,
             "ott": self.ott,
             "genre": self.genre.json() if self.genre else "NA",
