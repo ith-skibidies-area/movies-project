@@ -1,6 +1,8 @@
 import { useEffect } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import { useParams } from "react-router";
+import http from "../../services/http";
+import { toast } from "react-toastify";
 
 type formData = {
   name: string;
@@ -17,7 +19,14 @@ const CreateGenre = () => {
   const onSubmit = (data: FieldValues) => {
     console.warn("Validation not yet added for the form");
     console.log("Form submit clicked");
-    console.log(data);
+    http
+      .post("/genres", data, { headers: { Authorization: "Bearer " + localStorage.getItem("accessToken") } })
+      .then((response) => {
+        toast.success(response.data.msg);
+      })
+      .catch((error) => {
+        toast.error(error.response.data.msg);
+      });
   };
 
   const onError = () => {
