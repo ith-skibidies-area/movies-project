@@ -71,7 +71,7 @@ const ShowMovies = () => {
     movies?.map((movie) => ({
       ...movie,
       name: movie.name.toLowerCase(),
-      genre: { name: movie.genre.name.toLowerCase() },
+      genre: { name: movie.genre.name ? movie.genre.name.toLowerCase() : movie.genre },
     })),
     [sortOrder.key],
     [sortOrder.order]

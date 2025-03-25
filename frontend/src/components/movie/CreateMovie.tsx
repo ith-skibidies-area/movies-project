@@ -2,20 +2,30 @@ import { useEffect, useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import http from "../../services/http";
 import { toast } from "react-toastify";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 
-type formData = {
-  name: string;
-  genre_id: number;
-  ott: string;
-  release_date: string;
-};
+const schema = yup
+  .object({
+    name: yup.string().required().min(3).label("'Movie Name'"),
+    genre_id: yup.number().required().notOneOf([-1], "Please select a valid input").label("'Genre'"),
+    ott: yup.string().required().notOneOf(["default"], "Please select a valid input").label("'OTT'"),
+    release_date: yup.string().required().label("'Release Date'"),
+  })
+  .required();
+
+type formData = yup.InferType<typeof schema>;
 
 type GenreData = {
   name: string;
 };
 
 const CreateMovie = () => {
-  const { register, handleSubmit } = useForm<formData>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<formData>({ resolver: yupResolver(schema) });
   const [genres, setGenres] = useState<GenreData[]>([]);
   const [otts, setOtts] = useState([]);
 
@@ -46,6 +56,7 @@ const CreateMovie = () => {
 
   const onError = () => {
     console.error("Invalid form submitted");
+    console.log(errors);
   };
 
   return (
@@ -60,37 +71,45 @@ const CreateMovie = () => {
                 Movie Name<span className="text-red-600 text-sm">*</span>
               </label>
               <input
-                className="border font-medium text-gray-900 p-1 rounded border-gray-200 focus:outline-sky-400"
+                className={`border font-medium text-gray-900 p-1 rounded ${
+                  errors.name ? "border-red-600 focus:outline-red-400" : "border-gray-200 focus:outline-sky-400"
+                }`}
                 type="text"
                 id="name"
                 placeholder="Name"
                 {...register("name")}
               />
+              {errors.name ? <div className="text-sm text-red-500">{errors.name.message}</div> : null}
             </div>
             <div className="mt-3 flex flex-col gap-1">
               <label className="cursor-pointer font-medium text-gray-800" htmlFor="genre_id">
                 Genre ID<span className="text-red-600 text-sm">*</span>
               </label>
               <select
-                className="border font-medium text-gray-900 p-1 rounded border-gray-200 focus:outline-sky-400"
+                className={`border font-medium text-gray-900 p-1 rounded ${
+                  errors.genre_id ? "border-red-600 focus:outline-red-400" : "border-gray-200 focus:outline-sky-400"
+                }`}
                 id="genre_id"
                 {...register("genre_id")}
-                defaultValue={"0"}
+                defaultValue={-1}
               >
-                <option value="0">---Select---</option>
+                <option value={-1}>---Select---</option>
                 {genres.map((genre, index) => (
                   <option key={genre.name} value={index + 1}>
                     {genre.name}
                   </option>
                 ))}
               </select>
+              {errors.genre_id ? <div className="text-sm text-red-500">{errors.genre_id.message}</div> : null}
             </div>
             <div className="mt-3 flex flex-col gap-1">
               <label className="cursor-pointer font-medium text-gray-800" htmlFor="ott">
                 OTT Platform<span className="text-red-600 text-sm">*</span>
               </label>
               <select
-                className="border font-medium text-gray-900 p-1 rounded border-gray-200 focus:outline-sky-400"
+                className={`border font-medium text-gray-900 p-1 rounded ${
+                  errors.ott ? "border-red-600 focus:outline-red-400" : "border-gray-200 focus:outline-sky-400"
+                }`}
                 id="ott"
                 {...register("ott")}
                 defaultValue={"default"}
@@ -102,18 +121,22 @@ const CreateMovie = () => {
                   </option>
                 ))}
               </select>
+              {errors.ott ? <div className="text-sm text-red-500">{errors.ott.message}</div> : null}
             </div>
             <div className="mt-3 flex flex-col gap-1">
               <label className="cursor-pointer font-medium text-gray-800" htmlFor="release_date">
                 Release Date<span className="text-red-600 text-sm">*</span>
               </label>
               <input
-                className="border font-medium text-gray-900 p-1 rounded border-gray-200 focus:outline-sky-400"
+                className={`border font-medium text-gray-900 p-1 rounded ${
+                  errors.release_date ? "border-red-600 focus:outline-red-400" : "border-gray-200 focus:outline-sky-400"
+                }`}
                 type="date"
                 id="release_date"
                 {...register("release_date")}
               />
             </div>
+            {errors.release_date ? <div className="text-sm text-red-500">{errors.release_date.message}</div> : null}
             <div className="mt-3 flex flex-col">
               <button className="rounded-lg cursor-pointer bg-green-600 px-5 py-2 text-sm font-semibold text-white hover:bg-green-700 focus:outline-sky-400">
                 Save
