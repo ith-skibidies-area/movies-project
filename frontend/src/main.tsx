@@ -11,6 +11,7 @@ import Login from "./components/user/Login.tsx";
 import CreateGenre from "./components/genre/CreateGenre.tsx";
 import CreateMovie from "./components/movie/CreateMovie.tsx";
 import ShowMovies from "./components/movie/ShowMovies.tsx";
+import InitialPage from "./components/InitialPage.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -40,6 +41,7 @@ createRoot(document.getElementById("root")!).render(
             <Route path="/profile" element={<Profile />} />
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/wip" element={<InitialPage />} />
             <Route path="*" element={<Page404 />} />
           </Routes>
         </div>
