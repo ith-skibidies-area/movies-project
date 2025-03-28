@@ -1,5 +1,6 @@
 from flask import Blueprint, request
 from models.movies_model import MoviesModel
+from models.genre_model import GenreModel
 from flask_jwt_extended import jwt_required, get_jwt, get_jwt_identity
 from datetime import date
 
@@ -27,6 +28,9 @@ def show_create_movies():
 
             if MoviesModel.find_one(name=name):
                 return {"msg": "move name already taken"}, 400
+
+            if not GenreModel.find_one(id=genre_id):
+                return {"msg": "Genre does not exist"}
 
             movie = MoviesModel(name=name, genre_id=genre_id, ott=ott, releasedate=updated_date)
             movie.save()
