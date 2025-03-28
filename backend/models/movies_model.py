@@ -17,7 +17,7 @@ class MoviesModel(db.Model):
             "id": self.id,
             "name": self.name,
             "ott": self.ott,
-            "genre": self.genre.json() if self.genre else "NA",
+            "genre": self.genre.json() if self.genre else {"id": "NA", "name": "NA"},
             "release_date": str(self.releasedate.strftime("%d-%m-%Y")),
         }
 

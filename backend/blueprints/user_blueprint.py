@@ -31,10 +31,14 @@ def show_all_users():
     return [user.json() for user in UserModel.find_all()]
 
 
-@user_bp.route("/users/<string:username>", methods=["PUT", "DELETE"])
+@user_bp.route("/users/<string:username>", methods=["GET", "PUT", "DELETE"])
 @jwt_required(optional=True)
-def edit_delete_users(username):
+def show_edit_delete_users(username):
     jwt = get_jwt()
+    if request.method == "GET":
+        user = UserModel.find_one(username=username)
+        return user.json()
+
     if jwt.get("role", "NA") != "admin":
         return {"msg": "you are not authorized to perform this operation"}, 400
     else:
