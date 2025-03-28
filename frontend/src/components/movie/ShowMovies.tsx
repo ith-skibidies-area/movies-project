@@ -77,7 +77,7 @@ const ShowMovies = () => {
           .then((response) => {
             setMovies(response.data);
             const newPagesList = _.range(1, response.data.length / maxItemsPerPage + 1);
-            const newPageNumber = newPagesList.includes(page.number) ? page.number : Math.max(page.number - 1, 1);
+            const newPageNumber = newPagesList.includes(page.number) ? page.number : Math.max(...newPagesList, 1);
             setPage({ number: newPageNumber, pages: newPagesList });
           })
           .catch((error) => {
@@ -120,7 +120,7 @@ const ShowMovies = () => {
       <div className="flex gap-2">
         <div className="flex flex-col border border-gray-300">
           <div className="text-center border-b border-gray-300 py-4">
-            <div className="text-2xl font-bold text-gray-900 underline px-8">Genres</div>
+            <div className="text-2xl font-bold text-gray-800 underline px-8">Genres</div>
           </div>
           <div className="flex">
             <div className="grow">
@@ -130,7 +130,7 @@ const ShowMovies = () => {
                     <tr
                       key={genre.id}
                       className={`cursor-pointer  text-base border-b border-gray-300 ${
-                        genre.id === activeGenre ? "bg-sky-400 text-white" : "hover:bg-black/5"
+                        genre.id === activeGenre ? "bg-sky-400 text-white" : "text-gray-800 hover:bg-black/5"
                       }`}
                       onClick={() => {
                         const newMoviesList =
@@ -138,7 +138,7 @@ const ShowMovies = () => {
                         const newPagesList = _.range(1, newMoviesList.length / maxItemsPerPage + 1);
                         const newPageNumber = newPagesList.includes(page.number)
                           ? page.number
-                          : Math.max(page.number - 1, 1);
+                          : Math.max(...newPagesList, 1);
                         setPage({ number: newPageNumber, pages: newPagesList });
                         setActiveGenre(genre.id);
                       }}
@@ -153,7 +153,7 @@ const ShowMovies = () => {
         </div>
         <div className="flex flex-col w-full border border-gray-300">
           <div className="text-center border-b border-gray-300 py-4 flex justify-center items-start gap-1">
-            <div className="text-2xl font-bold text-gray-900 underline">Movies </div>
+            <div className="text-2xl font-bold text-gray-800 underline">Movies </div>
             {<span className="bg-green-400 px-2 py-0.5 rounded-full text-xs font-medium">{filterMovies().length}</span>}
           </div>
           <div className="flex">
@@ -187,7 +187,7 @@ const ShowMovies = () => {
                 </thead>
                 <tbody>
                   {moviesToShow?.map((movie) => (
-                    <tr key={movie.name} className="mt-2 border-b border-gray-200 hover:bg-lime-100">
+                    <tr key={movie.name} className="mt-2 border-b border-gray-200 hover:bg-black/5">
                       <td className="text-gray-800 py-1">{movie.id}</td>
                       <td className="text-gray-800 py-1">
                         <span className="font-medium">{movie.name}</span>
@@ -226,7 +226,7 @@ const ShowMovies = () => {
               {page.pages.map((p) => (
                 <td
                   key={p}
-                  className={`cursor-pointer border-2 border-gray-300 text-sky-600 px-3 py-0.5 ${
+                  className={`cursor-pointer border border-gray-300 text-sky-600 px-3 py-0.5 ${
                     p === page.number ? "bg-sky-400 text-white" : "hover:bg-gray-200"
                   }`}
                   onClick={() => setPage({ ...page, number: p })}
