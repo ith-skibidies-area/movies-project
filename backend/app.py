@@ -6,8 +6,10 @@ from blueprints.movies_blueprint import movies_bp
 from blueprints.auth import auth_bp
 from blueprints.ott_blueprint import ott_bp
 from db import db
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 app.secret_key = "key"
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///data.db"
